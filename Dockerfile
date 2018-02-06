@@ -13,7 +13,8 @@ RUN apt install --no-install-recommends -y \
     libcanberra-pulse \
     libv4l-0
 
-RUN curl -kL -O https://repo.skype.com/latest/skypeforlinux-64.deb
+#RUN curl -kL -O https://repo.skype.com/latest/skypeforlinux-64.deb
+COPY files/skypeforlinux-64.deb skypeforlinux-64.deb
 RUN apt install -y ./skypeforlinux-64.deb
 
 # Remove unwanted stuff
