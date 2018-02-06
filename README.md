@@ -18,4 +18,4 @@ GitHub Page: https://github.com/dmitrii-ageev/skype
 Docker Hub Page: https://hub.docker.com/r/dmitriiageev/skype
 
 # Note
-This docker image supports audio playback with PULSEAUDIO with a runtime dir mount.
+This docker image supports audio playback with PULSEAUDIO through a runtime dir mount.
