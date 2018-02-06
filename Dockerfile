@@ -4,6 +4,10 @@ MAINTAINER Dmitrii Ageev <d.ageev@gmail.com>
 # Set environment
 ENV UNAME skype
 
+ENV VERSION 8.11.0.4
+ENV FILE "skypeforlinux_${VERSION}_amd64.deb"
+ENV LINK "https://repo.skype.com/deb/pool/main/s/skypeforlinux/${FILE}"
+
 # Install software package
 RUN apt update
 RUN apt install --no-install-recommends -y \
@@ -13,12 +17,11 @@ RUN apt install --no-install-recommends -y \
     libcanberra-pulse \
     libv4l-0
 
-#RUN curl -kL -O https://repo.skype.com/latest/skypeforlinux-64.deb
-COPY files/skypeforlinux-64.deb skypeforlinux-64.deb
-RUN apt install -y ./skypeforlinux-64.deb
+RUN curl -kL -O "${LINK}"
+RUN apt install -y ./${FILE}
 
 # Remove unwanted stuff
-RUN rm -f skypeforlinux-64.deb
+RUN rm -f ${FILE}
 RUN apt purge -y --auto-remove curl
 
 # Copy pulse audio settings
