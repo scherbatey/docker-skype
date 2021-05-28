@@ -9,11 +9,14 @@ install_application() {
   echo "Installing ${APPLICATION}..."
   install -m 0755 /sbin/wrapper /target/${APPLICATION}
   chown ${USER_UID}:${USER_GID} /target/${APPLICATION}
+  install -m 0644 /tmp/security_profile.json /target/${APPLICATION}_security_profile.json
+  chown ${USER_UID}:${USER_GID} /target/${APPLICATION}_security_profile.json
 }
 
 uninstall_application() {
   echo "Uninstalling ${APPLICATION}..."
-  rm -rf /target/${APPLICATION}
+  rm -f /target/${APPLICATION}
+  rm -f /target/${APPLICATION}_security_profile.json
 }
 
 create_user() {
@@ -64,9 +67,15 @@ case "$1" in
     uninstall_application
     install_application
     ;;
-  *)
+  init)
     create_user
     grant_access_to_video_devices
+    /bin/sh
+    ;;
+  stop)
+    killall ${EXECUTABLE:-$APPLICATION} sh
+    ;;
+  *)
     launch_application
     ;;
 esac

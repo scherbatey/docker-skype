@@ -72,11 +72,18 @@ prepare_docker_volume_parameters
 prepare_docker_device_parameters
 
 echo "Starting ${APPLICATION}..."
-${SUDO} docker run -d --rm \
-  --name ${APPLICATION} -h docker \
+
+IMAGE=scherbatey/${APPLICATION}
+CONTAINER=$APPLICATION
+
+${SUDO} docker run -d --rm -it \
+  --name ${CONTAINER} -h ${APPLICATION}-docker \
   --cpuset-cpus 0 --memory 2048mb --net host \
+  --security-opt seccomp=~/bin/${APPLICATION}_security_profile.json \
   ${ENV_VARS} \
   ${VIDEO_DEVICES} \
   ${VOLUMES} \
-  dmitriiageev/${APPLICATION} $@ >/dev/null
+  ${IMAGE} \
+  init 
 
+${SUDO} docker exec -d ${CONTAINER} /sbin/entrypoint.sh $@
