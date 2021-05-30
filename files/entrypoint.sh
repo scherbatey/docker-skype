@@ -70,12 +70,11 @@ case "$1" in
   init)
     create_user
     grant_access_to_video_devices
-    /bin/sh
     ;;
-  stop)
-    killall ${EXECUTABLE:-$APPLICATION} sh
+  $APPLICATION)
+    launch_application
     ;;
   *)
-    launch_application
+    sleep infinity
     ;;
 esac

@@ -74,16 +74,21 @@ prepare_docker_device_parameters
 echo "Starting ${APPLICATION}..."
 
 IMAGE=scherbatey/${APPLICATION}
-CONTAINER=$APPLICATION
+CONTAINER=${APPLICATION}
+CONTAINER_HOSTNAME=${APPLICATION}-docker
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+SECURITY_PROFILE=${SCRIPT_DIR}/${APPLICATION}_security_profile.json
 
-${SUDO} docker run -d --rm -it \
-  --name ${CONTAINER} -h ${APPLICATION}-docker \
+${SUDO} docker run -d \
+  --name ${CONTAINER} -h ${CONTAINER_HOSTNAME} \
   --cpuset-cpus 0 --memory 2048mb --net host \
-  --security-opt seccomp=~/bin/${APPLICATION}_security_profile.json \
+  --security-opt seccomp=${SECURITY_PROFILE} \
   ${ENV_VARS} \
   ${VIDEO_DEVICES} \
   ${VOLUMES} \
   ${IMAGE} \
-  init 
+&& ${SUDO} docker exec ${CONTAINER} /sbin/entrypoint.sh init
 
-${SUDO} docker exec -d ${CONTAINER} /sbin/entrypoint.sh $@
+${SUDO} docker start ${CONTAINER}
+
+${SUDO} docker exec -d ${CONTAINER} /sbin/entrypoint.sh $APPLICATION $@

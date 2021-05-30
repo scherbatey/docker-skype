@@ -1,7 +1,5 @@
 FROM ubuntu:latest
 
-RUN cat /etc/lsb-release
-
 # Set environment
 ENV APPLICATION "skype"
 ENV VERSION 8.11.0.4
@@ -34,3 +32,5 @@ COPY files/entrypoint.sh /sbin/entrypoint.sh
 COPY files/security_profile.json /tmp/security_profile.json
 
 ENTRYPOINT ["/sbin/entrypoint.sh"]
+
+RUN echo 127.0.0.1 ${APPLICATION}-docker >> /etc/hosts
